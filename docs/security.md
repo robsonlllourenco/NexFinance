@@ -1,32 +1,31 @@
-# Diretrizes e Arquitetura de Segurança — NexFinance
+# Segurança — NexFinance
 
-A integridade dos dados e a privacidade financeira dos usuários constituem os pilares fundamentais da engenharia do **NexFinance**. Este documento detalha, em alto nível conceitual, as práticas e salvaguardas implementadas.
-
----
-
-## Pilares de Segurança
-
-### 1. Autenticação e Gestão de Sessões
-- **Criptografia Unidirecional de Senhas:** Senhas nunca são armazenadas em texto simples. O sistema utiliza algoritmos robustos de hash criptográfico com salt aleatório (`bcrypt`), prevenindo ataques de dicionário e rainbow tables.
-- **Tokens de Acesso Seguros:** As sessões de autenticação utilizam tokens assinados criptograficamente, com tempos de expiração controlados e renovação segura.
-- **Autenticação Federada (OAuth 2.0 / Google Identity):** Integração com o Google Identity Services para login seguro, transferindo a verificação de identidade para a infraestrutura do Google e garantindo que credenciais externas nunca passem pelos servidores do aplicativo.
-
-### 2. Proteção de Credenciais e Variáveis de Ambiente
-- **Separação Rigorosa de Segredos:** Chaves de API, segredos de assinatura e credenciais de serviços externos residem exclusivamente em arquivos de ambiente (`.env`) mantidos fora do controle de versão e protegidos por `.gitignore`.
-- **Injeção de Configuração em Tempo de Execução:** Em ambientes produtivos (ex: Square Cloud), variáveis são injetadas diretamente pelo ambiente operacional isolado.
-
-### 3. Sanitização e Validação de Entradas
-- **Defesa Contra Injeção (XSS / Code Injection):** Todas as entradas do usuário (descrições, categorias, notas) passam por escape HTML e validação estrita antes da renderização e persistência.
-- **Validação de Tipos Numéricos e Datas:** Valores monetários são sanitizados e parseados por rotinas dedicadas que impedem discrepâncias com pontuações ou caracteres inesperados.
-
-### 4. Isolamento Multi-usuário
-- **Segregação de Dados:** Cada usuário autenticado possui seu escopo financeiro estritamente isolado por ID exclusivo (`userId`). Nenhuma consulta ou mutação pode cruzar o limite entre usuários diferentes.
-- **Controle de Acesso em Nível de Endpoint:** Todas as rotas de finanças exigem autenticação obrigatória via cabeçalho `Authorization: Bearer <token>`.
-
-### 5. Resiliência e Prevenção de Perda de Dados
-- **Proteção do Banco de Dados no Deploy:** Os scripts de empacotamento e deploy excluem automaticamente os arquivos de banco de dados em produção, impedindo que publicações sobrescrevam os dados reais dos usuários.
-- **Backups Criptografados e Portabilidade:** O usuário tem a possibilidade de realizar downloads de backups completos de seus próprios registros a qualquer momento em formato JSON estruturado.
+Este documento descreve as práticas e cuidados técnicos adotados no desenvolvimento do **NexFinance** para proteger as contas e as informações financeiras cadastradas.
 
 ---
 
-> **Nota:** Por motivos éticos e de proteção patrimonial dos usuários, implementações algorítmicas específicas, rotas de infraestrutura interna e credenciais de serviços nunca são expostas publicamente.
+## Práticas de Proteção Implementadas
+
+### 1. Autenticação e Senhas
+- **Armazenamento de senhas:** Nenhuma senha é salva em texto simples. O sistema utiliza a biblioteca `bcrypt` com geração de salt aleatório para gerar o hash seguro das credenciais.
+- **Sessões protegidas:** As chamadas autenticadas utilizam tokens de acesso individuais para validar cada requisição.
+- **Login com Google (OAuth 2.0):** Suporte ao Google Identity Services, permitindo que o usuário entre usando sua conta Google sem compartilhar a senha diretamente com a aplicação.
+
+### 2. Gestão de Variáveis de Ambiente
+- **Separação de chaves e segredos:** Chaves de API, credenciais e portas de rede ficam no arquivo `.env`, que é ignorado pelo Git através do `.gitignore`.
+- **Exemplo de configuração:** O projeto disponibiliza apenas um `.env.example` sem valores reais para orientar a configuração local.
+
+### 3. Validação e Tratamento de Dados
+- **Prevenção contra XSS:** Textos informados pelo usuário (como nomes de despesas, descrições e anotações) passam por funções de escape antes de serem exibidos na tela.
+- **Validação de entradas numéricas:** Tratamento específico para conversão de moedas e centavos, evitando erros de digitação e valores inválidos.
+
+### 4. Isolamento por Usuário
+- **Escopo restrito:** As rotas financeiras exigem autenticação obrigatória via cabeçalho `Authorization: Bearer <token>` e retornam somente os registros vinculados ao ID do usuário autenticado.
+
+### 5. Cuidados no Deploy
+- **Preservação de dados:** Os scripts de deploy para a hospedagem excluem pastas locais de dados para não sobrescrever as informações dos usuários que já estão em produção.
+- **Backups pelo próprio usuário:** O sistema oferece a opção de baixar uma cópia completa dos lançamentos em formato JSON a qualquer momento.
+
+---
+
+> O código-fonte completo e a infraestrutura interna do backend permanecem em repositório privado. Este repositório público reúne apenas materiais voltados à apresentação do projeto.
