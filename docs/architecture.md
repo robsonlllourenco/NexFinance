@@ -1,10 +1,10 @@
-# 🏗️ Visão Geral de Arquitetura — NexFinance
+# Visão Geral de Arquitetura — NexFinance
 
 Este documento apresenta uma visão conceitual de alto nível sobre os padrões de engenharia de software e a infraestrutura tecnológica do **NexFinance**.
 
 ---
 
-## 🧭 Visão Conceitual
+## Visão Conceitual
 
 O NexFinance foi projetado seguindo uma arquitetura multicamadas moderna, desacoplada e voltada para a máxima performance do usuário final, combinando a rapidez de uma Progressive Web App (PWA) client-side com um backend leve e resiliente em Node.js.
 
@@ -42,7 +42,7 @@ flowchart TD
 
 ---
 
-## 🧩 Principais Componentes do Sistema
+## Principais Componentes do Sistema
 
 ### 1. Camada de Apresentação (Frontend & PWA)
 - **Zero Framework Overhead:** Construído com JavaScript moderno (ES6+), garantindo carregamento instantâneo sem a sobrecarga de bundles pesados.

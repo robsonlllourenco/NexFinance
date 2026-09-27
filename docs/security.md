@@ -1,10 +1,10 @@
-# 🛡️ Diretrizes e Arquitetura de Segurança — NexFinance
+# Diretrizes e Arquitetura de Segurança — NexFinance
 
 A integridade dos dados e a privacidade financeira dos usuários constituem os pilares fundamentais da engenharia do **NexFinance**. Este documento detalha, em alto nível conceitual, as práticas e salvaguardas implementadas.
 
 ---
 
-## 🔒 Pilares de Segurança
+## Pilares de Segurança
 
 ### 1. Autenticação e Gestão de Sessões
 - **Criptografia Unidirecional de Senhas:** Senhas nunca são armazenadas em texto simples. O sistema utiliza algoritmos robustos de hash criptográfico com salt aleatório (`bcrypt`), prevenindo ataques de dicionário e rainbow tables.
